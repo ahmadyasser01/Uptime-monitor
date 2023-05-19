@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const connectDB = async (url: string): Promise<void> => {
-  await mongoose.set("strictQuery", true);
+  mongoose.set("strictQuery", true);
   await mongoose.connect(url);
   console.log("DB connection established");
 };
