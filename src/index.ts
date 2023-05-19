@@ -7,7 +7,9 @@ const start = async () => {
     app.listen(process.env.PORT, () => {
       console.log(`App is running on port ${process.env.PORT}`);
     });
-  } catch (error) {}
+  } catch (error) {
+    process.exit(1);
+  }
 };
 
 start();
