@@ -14,6 +14,8 @@ export const signup = async (
 
     const verificationToken = await UserService.signup(userDetails);
 
+    console.log(verificationToken);
+
     //TODO: send verification email
 
     response.status(201).json({
@@ -49,6 +51,8 @@ export const verify = async (
   next: NextFunction
 ) => {
   try {
+    console.log("verify");
+
     const { email, verificationToken } = req.body;
 
     await UserService.verify(email, verificationToken);

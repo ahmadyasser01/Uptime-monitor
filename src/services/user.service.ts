@@ -63,10 +63,10 @@ export class UserService {
     if (!user) {
       throw new Error(`User Not found`);
     }
-
-    if (!user.verified) {
-      throw new Error("User is not verified");
+    if (user.verified) {
+      throw new Error(`User is already verified`);
     }
+
     const validToken = await UserService.compareVerificationToken(
       verificationToken,
       user.verificationToken
@@ -84,8 +84,8 @@ export class UserService {
     userVerificationToken: string
   ): Promise<boolean> {
     //TODO: compare Token
-
-    return true;
+    const hashedInput = UserService.hashToken(inputVerification);
+    return hashedInput === userVerificationToken;
   }
 
   static createVerificationToken(): {
@@ -93,11 +93,12 @@ export class UserService {
     hashedVerificationToken: string;
   } {
     const verificationToken = crypto.randomBytes(32).toString("hex");
-    const hashedVerificationToken = crypto
-      .createHash("sha256")
-      .update(verificationToken)
-      .digest("hex");
+    const hashedVerificationToken = UserService.hashToken(verificationToken);
 
     return { verificationToken, hashedVerificationToken };
+  }
+
+  private static hashToken(token: string) {
+    return crypto.createHash("sha256").update(token).digest("hex");
   }
 }

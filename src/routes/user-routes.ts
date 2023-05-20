@@ -7,4 +7,6 @@ router.post("/signup", signup);
 
 router.post("/login", login);
 
-router.patch("verify", verify);
+router.patch("/verify", verify);
+
+export { router as userRouter };
