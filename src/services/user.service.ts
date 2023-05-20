@@ -1,4 +1,4 @@
-import { IUser, IUserSignup, User } from "../models/user-schema";
+import { IUser, IUserSignup, User } from "../models/user";
 // import { PasswordService } from "./password.service";
 import crypto from "crypto";
 import { PasswordService } from "./password.service";

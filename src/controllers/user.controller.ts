@@ -1,6 +1,6 @@
 import { Response, Request, NextFunction } from "express";
 import { UserService } from "../services/user.service";
-import { IUser } from "../models/user-schema";
+import { IUser } from "../models/user";
 import { PasswordService } from "../services/password.service";
 import { JwtService } from "../services/jwt.service";
 
