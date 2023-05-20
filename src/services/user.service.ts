@@ -1,5 +1,6 @@
 import { IUserSignup, User } from "../models/user-schema";
-import { PasswordService } from "./password.service";
+// import { PasswordService } from "./password.service";
+import crypto from "crypto";
 
 export class UserService {
   public constructor() {}
@@ -50,5 +51,18 @@ export class UserService {
     //TODO: compare Token
 
     return true;
+  }
+
+  static createVerificationToken(): {
+    verificationToken: string;
+    hashedVerificationToken: string;
+  } {
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+    const hashedVerificationToken = crypto
+      .createHash("sha256")
+      .update(verificationToken)
+      .digest("hex");
+
+    return { verificationToken, hashedVerificationToken };
   }
 }
