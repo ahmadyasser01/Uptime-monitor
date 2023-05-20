@@ -11,16 +11,8 @@ export const signup = async (
 ) => {
   try {
     const userDetails: IUser = req.body;
-    let user = await UserService.checkExists(userDetails.email);
 
-    if (user) {
-      throw new Error(`User already Exists`);
-    }
-    // hash password
-    userDetails.password = await PasswordService.hashPassword(
-      userDetails.password
-    );
-    user = await UserService.signup(userDetails);
+    const verificationToken = await UserService.signup(userDetails);
 
     //TODO: send verification email
 

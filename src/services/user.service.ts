@@ -1,6 +1,7 @@
 import { IUserSignup, User } from "../models/user-schema";
 // import { PasswordService } from "./password.service";
 import crypto from "crypto";
+import { PasswordService } from "./password.service";
 
 export class UserService {
   public constructor() {}
@@ -11,13 +12,24 @@ export class UserService {
   }
 
   static async signup(userDetails: IUserSignup) {
-    // create new User
-    const user = new User({
+    let user = await UserService.checkExists(userDetails.email);
+
+    if (user) {
+      throw new Error(`User already Exists`);
+    }
+    // hash password
+    userDetails.password = await PasswordService.hashPassword(
+      userDetails.password
+    );
+    user = new User({
       ...userDetails,
     });
+    const { verificationToken, hashedVerificationToken } =
+      UserService.createVerificationToken();
 
+    user.verificationToken = hashedVerificationToken;
     await user.save();
-    return user;
+    return verificationToken;
   }
 
   static async verify(
