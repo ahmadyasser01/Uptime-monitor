@@ -1,7 +1,8 @@
-import { IUserSignup, User } from "../models/user-schema";
+import { IUser, IUserSignup, User } from "../models/user-schema";
 // import { PasswordService } from "./password.service";
 import crypto from "crypto";
 import { PasswordService } from "./password.service";
+import { JwtService } from "./jwt.service";
 
 export class UserService {
   public constructor() {}
@@ -30,6 +31,28 @@ export class UserService {
     user.verificationToken = hashedVerificationToken;
     await user.save();
     return verificationToken;
+  }
+
+  static async login(userDetails: IUserSignup) {
+    const user = await UserService.checkExists(userDetails.email);
+
+    if (!user) {
+      throw new Error(`User Not found`);
+    }
+
+    if (!user.verified) {
+      throw new Error("User is not verified");
+    }
+    const validPassword = await PasswordService.comparePassword(
+      userDetails.password,
+      user.password
+    );
+    if (!validPassword) {
+      throw new Error("Email or password is incorrect");
+    }
+
+    const accessToken = JwtService.generateAccessToken(user.id, user.email);
+    return { user, accessToken };
   }
 
   static async verify(

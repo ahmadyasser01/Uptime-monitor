@@ -32,24 +32,7 @@ export const login = async (
 ) => {
   try {
     const userDetails: IUser = req.body;
-    const user = await UserService.checkExists(userDetails.email);
-
-    if (!user) {
-      throw new Error(`User Not found`);
-    }
-
-    if (!user.verified) {
-      throw new Error("User is not verified");
-    }
-    const validPassword = await PasswordService.comparePassword(
-      userDetails.password,
-      user.password
-    );
-    if (!validPassword) {
-      throw new Error("Email or password is incorrect");
-    }
-
-    const accessToken = JwtService.generateAccessToken(user.id, user.email);
+    const { user, accessToken } = await UserService.login(userDetails);
 
     response.status(201).json({
       ...user,
