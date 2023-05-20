@@ -13,4 +13,9 @@ export class JwtService {
 
     return accessToken;
   }
+
+  static verify(token: string) {
+    const payload = jwt.verify(token, env.JWT_TOKEN);
+    return payload;
+  }
 }
