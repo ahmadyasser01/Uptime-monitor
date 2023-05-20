@@ -75,22 +75,8 @@ export const verify = async (
 ) => {
   try {
     const { email, verificationToken } = req.body;
-    const user = await UserService.checkExists(email);
 
-    if (!user) {
-      throw new Error(`User Not found`);
-    }
-
-    if (!user.verified) {
-      throw new Error("User is not verified");
-    }
-    const validToken = await UserService.compareVerificationToken(
-      verificationToken,
-      user.verificationToken
-    );
-    if (!validToken) {
-      throw new Error("invalid verification token");
-    }
+    await UserService.verify(email, verificationToken);
 
     response.status(201).json({
       message: "User verified successfully",

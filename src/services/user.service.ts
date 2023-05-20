@@ -19,6 +19,30 @@ export class UserService {
     return user;
   }
 
+  static async verify(
+    email: string,
+    verificationToken: string
+  ): Promise<void | Error> {
+    const user = await UserService.checkExists(email);
+    if (!user) {
+      throw new Error(`User Not found`);
+    }
+
+    if (!user.verified) {
+      throw new Error("User is not verified");
+    }
+    const validToken = await UserService.compareVerificationToken(
+      verificationToken,
+      user.verificationToken
+    );
+    if (!validToken) {
+      throw new Error("invalid verification token");
+    }
+
+    user.verified = true;
+    await user.save();
+  }
+
   static async compareVerificationToken(
     inputVerification: string,
     userVerificationToken: string
