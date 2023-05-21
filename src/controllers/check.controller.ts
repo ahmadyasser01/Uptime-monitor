@@ -46,3 +46,21 @@ export const getAllChecks = async (req: Request, response: Response) => {
     response.status(404).json({ error: error.message });
   }
 };
+
+export const deleteCheck = async (req: Request, response: Response) => {
+  const checkId = req.params.id;
+
+  try {
+    const deleted = await CheckService.deleteCheck(
+      checkId,
+      req.currentUser!.id
+    );
+    if (!deleted) throw new Error("Error deleting check..");
+
+    return response
+      .status(200)
+      .json({ message: "Check deleted successfully.." });
+  } catch (error: any) {
+    return response.status(500).json({ message: error.message || "Error" });
+  }
+};

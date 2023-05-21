@@ -2,6 +2,7 @@ import { Router } from "express";
 import { Auth } from "../middlewares/auth";
 import {
   createCheck,
+  deleteCheck,
   getAllChecks,
   getCheck,
 } from "../controllers/check.controller";
@@ -16,6 +17,6 @@ router.get("/:id", Auth, getCheck);
 // router.patch(":id");
 // router.put("/:id");
 
-// router.delete("/:id");
+router.delete("/:id", Auth, deleteCheck);
 
 export { router as checkRoutes };

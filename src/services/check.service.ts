@@ -26,4 +26,13 @@ export class CheckService {
 
     return check;
   }
+
+  static async deleteCheck(checkId: string, userId: string) {
+    const check = await Check.deleteOne({
+      _id: checkId,
+      user: userId,
+    });
+    if (check.deletedCount === 0) return false;
+    return true;
+  }
 }
