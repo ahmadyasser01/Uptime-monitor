@@ -34,3 +34,15 @@ export const getCheck = async (req: Request, response: Response) => {
     response.status(404).json({ error: error.message });
   }
 };
+
+export const getAllChecks = async (req: Request, response: Response) => {
+  try {
+    //TODO:implement pagination and select certain fields
+    const checks = await CheckService.findAll(req.currentUser!.id);
+    if (!checks || checks.length === 0) throw new Error("Checks not found");
+
+    response.status(200).json(checks);
+  } catch (error: any) {
+    response.status(404).json({ error: error.message });
+  }
+};

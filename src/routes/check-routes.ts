@@ -1,12 +1,16 @@
 import { Router } from "express";
 import { Auth } from "../middlewares/auth";
-import { createCheck, getCheck } from "../controllers/check.controller";
+import {
+  createCheck,
+  getAllChecks,
+  getCheck,
+} from "../controllers/check.controller";
 
 const router = Router();
 
 router.post("/", Auth, createCheck);
 
-// router.get("/");
+router.get("/", Auth, getAllChecks);
 router.get("/:id", Auth, getCheck);
 
 // router.patch(":id");

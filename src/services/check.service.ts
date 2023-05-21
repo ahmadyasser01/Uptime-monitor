@@ -11,6 +11,11 @@ export class CheckService {
     return null;
   }
 
+  static async findAll(userId: string) {
+    const checks = await Check.find({ user: userId }).select("name url ");
+    return checks;
+  }
+
   static async createCheck(checkData: ICheck, user: string) {
     const check = new Check({
       ...checkData,
