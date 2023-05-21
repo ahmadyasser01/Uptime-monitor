@@ -45,30 +45,24 @@ const checkSchema = new Schema<ICheck>({
   path: { type: String, required: false },
   port: { type: Number, required: false },
   webhook: { type: String, required: false },
-  timeout: { type: Number, required: false },
-  interval: { type: Number, required: false },
-  threshold: { type: Number, required: false },
+  timeout: { type: Number, required: false, default: 5000 },
+  interval: { type: Number, required: false, default: 10 * 60 * 1000 },
+  threshold: { type: Number, required: false, default: 1 },
   authentication: {
     username: {
       type: String,
-      required: true,
     },
     password: {
       type: String,
-      required: true,
     },
-    required: false,
   },
   httpHeaders: {
     type: Object,
-    required: false,
   },
   assert: {
     statusCode: {
       type: Number,
-      required: true,
     },
-    required: false,
   },
   tags: {
     type: [String],

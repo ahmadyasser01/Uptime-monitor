@@ -1,15 +1,17 @@
 import { Router } from "express";
+import { Auth } from "../middlewares/auth";
+import { createCheck } from "../controllers/check.controller";
 
 const router = Router();
 
-router.post("/checks");
+router.post("/", Auth, createCheck);
 
-router.get("/checks");
-router.get("/checks/:id");
+// router.get("/");
+// router.get("/:id");
 
-router.patch("/checks/:id");
-router.put("/checks/:id");
+// router.patch(":id");
+// router.put("/:id");
 
-router.delete("/checks/:id");
+// router.delete("/:id");
 
 export { router as checkRoutes };
