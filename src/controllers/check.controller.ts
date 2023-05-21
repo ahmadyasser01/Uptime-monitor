@@ -22,3 +22,15 @@ export const createCheck = async (req: Request, response: Response) => {
       .json({ error: error.message || "Erorr creating check" });
   }
 };
+
+export const getCheck = async (req: Request, response: Response) => {
+  try {
+    const checkId = req.params.id;
+    const check = await CheckService.findById(checkId, req.currentUser!.id);
+    if (!check) throw new Error("Check not found");
+
+    response.status(200).json(check);
+  } catch (error: any) {
+    response.status(404).json({ error: error.message });
+  }
+};
