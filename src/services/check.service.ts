@@ -35,4 +35,19 @@ export class CheckService {
     if (check.deletedCount === 0) return false;
     return true;
   }
+
+  static async updateCheck(checkId: string, userId: string, updates: any) {
+    const check = await Check.findOneAndUpdate(
+      {
+        user: userId,
+        _id: checkId,
+      },
+      {
+        $set: {
+          updates,
+        },
+      }
+    );
+    return check;
+  }
 }

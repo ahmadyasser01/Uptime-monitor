@@ -64,3 +64,22 @@ export const deleteCheck = async (req: Request, response: Response) => {
     return response.status(500).json({ message: error.message || "Error" });
   }
 };
+
+export const updateCheck = async (req: Request, response: Response) => {
+  try {
+    const checkId = req.params.id;
+    const check = await CheckService.updateCheck(
+      checkId,
+      req.currentUser!.id,
+      req.body
+    );
+
+    if (!check) throw new Error("Error updating check");
+
+    return response.status(200).json(check);
+  } catch (error: any) {
+    return response
+      .status(500)
+      .json({ error: error.message || "Error updating check" });
+  }
+};
