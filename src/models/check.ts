@@ -1,9 +1,9 @@
 import mongoose, { Schema, model } from "mongoose";
 
 export enum PROTOCOL {
-  HTTP = "HTTP",
-  HTTPS = "HTTPS",
-  TCP = "TCP",
+  HTTP = "http",
+  HTTPS = "https",
+  TCP = "tcp",
 }
 
 export interface ICheck {
@@ -27,6 +27,7 @@ export interface ICheck {
   };
   tags: string[];
   ignoreSSL?: boolean;
+  lastCreatedTime?: Date;
 }
 
 const checkSchema = new Schema<ICheck>({
@@ -71,6 +72,10 @@ const checkSchema = new Schema<ICheck>({
   ignoreSSL: {
     type: Boolean,
     default: false,
+  },
+  lastCreatedTime: {
+    type: Date,
+    default: new Date(0),
   },
 });
 

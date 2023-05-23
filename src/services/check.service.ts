@@ -1,3 +1,4 @@
+import { Document } from "mongoose";
 import { Check, ICheck } from "../models/check";
 
 export class CheckService {
@@ -49,5 +50,14 @@ export class CheckService {
       }
     );
     return check;
+  }
+
+  static async findChecksToGenerateReport(currentTime: Date) {
+    const checks = await Check.find({
+      $expr: {
+        $lte: ["$lastCreatedTime", { $subtract: [currentTime, "$period"] }],
+      },
+    });
+    return checks;
   }
 }
