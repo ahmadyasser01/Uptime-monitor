@@ -33,8 +33,8 @@ export class ReportService {
         check.port ? ":" + check.port : ""
       }/${check.path ? check.path : ""}`,
       timeout: check.timeout,
-      //TODO: ADD HEADERS,
-      // auth: check.authentication,
+      headers: check.httpHeaders,
+      auth: check.authentication,
     };
     // axiosRetry
     const startTime = Date.now();
@@ -70,11 +70,15 @@ export class ReportService {
         URL_STATUS.DOWN,
         check.interval!
       );
+      checkReport.outages++;
+      if (checkReport.outages >= check.threshold!) {
+        // emit event to send notification
+      }
     } finally {
       check.lastCreatedTime = new Date();
-      await checkReport.save();
-      await check.save();
-      console.log("saved");
+      const dbStart = Date.now();
+      return [checkReport.save(), check.save()];
+      console.log((Date.now() - dbStart) / 1000);
     }
   }
 

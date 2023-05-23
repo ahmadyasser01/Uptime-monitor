@@ -53,9 +53,10 @@ export class CheckService {
   }
 
   static async findChecksToGenerateReport(currentTime: Date) {
+    console.log(currentTime);
     const checks = await Check.find({
       $expr: {
-        $lte: ["$lastCreatedTime", { $subtract: [currentTime, "$period"] }],
+        $lte: ["$lastCreatedTime", { $subtract: [currentTime, "$interval"] }],
       },
     });
     return checks;

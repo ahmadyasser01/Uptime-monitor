@@ -48,7 +48,7 @@ const checkSchema = new Schema<ICheck>({
   webhook: { type: String, required: false },
   timeout: { type: Number, required: false, default: 5000 },
   interval: { type: Number, required: false, default: 10 * 60 * 1000 },
-  threshold: { type: Number, required: false, default: 1 },
+  threshold: { type: Number, default: 1 },
   authentication: {
     username: {
       type: String,

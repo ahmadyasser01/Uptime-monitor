@@ -10,7 +10,9 @@ const start = async () => {
     app.listen(process.env.PORT, () => {
       console.log(`App is running on port ${process.env.PORT}`);
 
-      cron.schedule("* * * * *", async () => {
+      cron.schedule("*/10 * * * * *", async () => {
+        let promises: any[] = [];
+
         console.log("Testing");
 
         const currentTime = new Date();
@@ -19,10 +21,12 @@ const start = async () => {
         const checks = await CheckService.findChecksToGenerateReport(
           currentTime
         );
-        console.log(checks);
         checks.forEach(async (check) => {
-          await ReportService.generateReport(check);
+          const res = await ReportService.generateReport(check);
+          promises.push(res);
         });
+        await Promise.all(promises);
+        console.log((Date.now() - currentTime.getTime()) / 1000);
       });
     });
   } catch (error) {

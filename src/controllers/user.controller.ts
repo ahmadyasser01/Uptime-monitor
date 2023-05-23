@@ -3,6 +3,7 @@ import { UserService } from "../services/user.service";
 import { IUser } from "../models/user";
 import { PasswordService } from "../services/password.service";
 import { JwtService } from "../services/jwt.service";
+import { MailService } from "../services/mail.service";
 
 export const signup = async (
   req: Request,
@@ -14,9 +15,12 @@ export const signup = async (
 
     const verificationToken = await UserService.signup(userDetails);
 
-    console.log(verificationToken);
-
     //TODO: send verification email
+    await MailService.sendMail({
+      to: userDetails.email,
+      subject: "Verification",
+      text: verificationToken,
+    });
 
     response.status(201).json({
       message:
