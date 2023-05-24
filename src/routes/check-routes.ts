@@ -12,6 +12,7 @@ import {
   createCheckValidator,
   updateCheckValidator,
 } from "../validation/check.validation";
+import { ReportRouter } from "./report-routes";
 
 const router = Router();
 
@@ -21,7 +22,7 @@ router.get("/", Auth, getAllChecks);
 router.get("/:id", Auth, getCheck);
 
 router.patch(
-  ":id",
+  "/:id",
   Auth,
   validationMiddleware(updateCheckValidator),
   updateCheck
@@ -34,5 +35,7 @@ router.put(
 );
 
 router.delete("/:id", Auth, deleteCheck);
+
+router.use("/:id/reports", Auth, ReportRouter);
 
 export { router as checkRoutes };

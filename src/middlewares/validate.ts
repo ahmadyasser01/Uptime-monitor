@@ -8,7 +8,7 @@ export function validationMiddleware(
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
     const validationOptions: Joi.AsyncValidationOptions = {
-      abortEarly: true,
+      abortEarly: false,
       allowUnknown: false,
     };
     const validationPromises: Promise<any>[] = [];
@@ -32,6 +32,7 @@ export function validationMiddleware(
         return next();
       })
       .catch((error) => {
+        console.log(error);
         const errors: any[] = [];
         error.details?.forEach((err: any) => {
           errors.push(err.message);

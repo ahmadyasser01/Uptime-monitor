@@ -23,9 +23,9 @@ export const createCheckValidator = Joi.object({
 });
 
 export const updateCheckValidator = Joi.object({
-  name: Joi.string().required(),
-  url: Joi.string().required().domain(),
-  protocol: Joi.string().valid(PROTOCOL).required(),
+  name: Joi.string(),
+  url: Joi.string().domain(),
+  protocol: Joi.string().valid(PROTOCOL),
   path: Joi.string(),
   webhook: Joi.string(),
   timeout: Joi.number(),
