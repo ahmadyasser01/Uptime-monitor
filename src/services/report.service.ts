@@ -128,8 +128,6 @@ export class ReportService {
   }
 
   static async getReportsByTag(userId: string, tags?: string[]) {
-    console.log(tags && tags.length > 0);
-
     const aggregationPipeline = [
       {
         $match: {

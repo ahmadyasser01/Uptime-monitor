@@ -7,12 +7,20 @@ export class MailService {
 
   private constructor() {
     // Private constructor to prevent direct instantiation
+    // {
+    //   host: env.SMTP_HOST,
+    //   port: env.SMTP_PORT,
+    //   auth: {
+    //     user: env.SMTP_USER,
+    //     pass: env.SMTP_PASS,
+    //   },
+    // }
     this.transporter = nodemailer.createTransport({
-      host: env.SMTP_HOST,
-      port: env.SMTP_PORT,
+      service: "hotmail",
+
       auth: {
-        user: env.SMTP_USER,
-        pass: env.SMTP_PASS,
+        user: env.EMAIL,
+        pass: env.EMAIL_PASSWORD,
       },
     });
   }
@@ -26,7 +34,7 @@ export class MailService {
 
   public static async sendMail(options: any) {
     await MailService.getInstance().transporter.sendMail({
-      from: "uptime <uptime@test.com>",
+      from: env.EMAIL,
       to: options.to,
       subject: options.subject,
       text: options.text,
