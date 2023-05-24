@@ -1,6 +1,6 @@
-import { Document } from "mongoose";
+import mongoose, { Document } from "mongoose";
 import { IReport, Report, URL_STATUS } from "../models/report";
-import { ICheck } from "../models/check";
+import { Check, ICheck } from "../models/check";
 import { Types } from "mongoose";
 import axios, { AxiosRequestConfig } from "axios";
 import { CheckService } from "./check.service";
@@ -127,7 +127,48 @@ export class ReportService {
     return deletedReport;
   }
 
-  static async getReportsByTag() {
-    return true;
+  static async getReportsByTag(userId: string, tags?: string[]) {
+    console.log(tags && tags.length > 0);
+
+    const aggregationPipeline = [
+      {
+        $match: {
+          user: new mongoose.Types.ObjectId(userId),
+        },
+      },
+      {
+        $lookup: {
+          from: "reports",
+          localField: "_id",
+          foreignField: "check",
+          as: "report",
+        },
+      },
+      {
+        $unwind: {
+          path: "$report",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          report: 1,
+          _id: 0,
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: "$report",
+        },
+      },
+    ];
+    if (tags && tags.length > 0)
+      //@ts-ignore
+      aggregationPipeline[0]!.$match!.tags = {
+        $in: tags,
+      };
+
+    const reports = await Check.aggregate(aggregationPipeline);
+    return reports;
   }
 }

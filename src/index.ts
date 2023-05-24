@@ -10,28 +10,28 @@ const start = async () => {
     app.listen(process.env.PORT, () => {
       console.log(`App is running on port ${process.env.PORT}`);
 
-      cron.schedule("* * * * *", async () => {
-        let promises: any[] = [];
+      // cron.schedule("* * * * *", async () => {
+      //   let promises: any[] = [];
 
-        console.log("Testing");
+      //   console.log("Testing");
 
-        const currentTime = new Date();
+      //   const currentTime = new Date();
 
-        // TODO: GET REPORTS FROM DATABASE THAT EXCCEDED THE PERIOD;
-        const checks = await CheckService.findChecksToGenerateReport(
-          currentTime
-        );
-        checks.forEach(async (check) => {
-          console.log("===========================");
-          console.log(check.url);
-          const res = await ReportService.generateReport(check);
-          console.log(res);
-          promises.push(res);
-          console.log("===========================");
-        });
-        await Promise.allSettled(promises);
-        console.log((Date.now() - currentTime.getTime()) / 1000);
-      });
+      //   // TODO: GET REPORTS FROM DATABASE THAT EXCCEDED THE PERIOD;
+      //   const checks = await CheckService.findChecksToGenerateReport(
+      //     currentTime
+      //   );
+      //   checks.forEach(async (check) => {
+      //     console.log("===========================");
+      //     console.log(check.url);
+      //     const res = await ReportService.generateReport(check);
+      //     console.log(res);
+      //     promises.push(res);
+      //     console.log("===========================");
+      //   });
+      //   await Promise.allSettled(promises);
+      //   console.log((Date.now() - currentTime.getTime()) / 1000);
+      // });
     });
   } catch (error) {
     process.exit(1);

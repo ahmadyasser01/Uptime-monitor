@@ -24,5 +24,9 @@ export const getReport = async (request: Request, response: Response) => {
 };
 
 export const getReportsByTag = async (request: Request, response: Response) => {
-  const reports = await ReportService.getReportsByTag();
+  const reports = await ReportService.getReportsByTag(
+    request.currentUser!.id,
+    (request.query.tags as string[]) || []
+  );
+  response.status(200).json(reports);
 };
