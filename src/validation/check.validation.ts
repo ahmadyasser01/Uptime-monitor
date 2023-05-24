@@ -1,8 +1,9 @@
 import Joi from "joi";
+import { PROTOCOL } from "../models/check";
 
-export const createCheck = Joi.object({
+export const createCheckValidator = Joi.object({
   name: Joi.string().required(),
-  url: Joi.string().required().domain().trim(""),
+  url: Joi.string().required().domain(),
   protocol: Joi.string().required(),
   path: Joi.string(),
   webhook: Joi.string(),
@@ -13,7 +14,7 @@ export const createCheck = Joi.object({
     username: Joi.string().required(),
     password: Joi.string().required(),
   }),
-  httpHeaders: Joi.object({}),
+  httpHeaders: Joi.object(),
   assert: Joi.object({
     statusCode: Joi.number(),
   }),
@@ -21,10 +22,10 @@ export const createCheck = Joi.object({
   ignoreSSL: Joi.boolean(),
 });
 
-export const updateCheck = Joi.object({
+export const updateCheckValidator = Joi.object({
   name: Joi.string().required(),
-  url: Joi.string().required().domain().trim(""),
-  protocol: Joi.string().required(),
+  url: Joi.string().required().domain(),
+  protocol: Joi.string().valid(PROTOCOL).required(),
   path: Joi.string(),
   webhook: Joi.string(),
   timeout: Joi.number(),
@@ -34,7 +35,7 @@ export const updateCheck = Joi.object({
     username: Joi.string().required(),
     password: Joi.string().required(),
   }),
-  httpHeaders: Joi.object({}),
+  httpHeaders: Joi.object(),
   assert: Joi.object({
     statusCode: Joi.number(),
   }),

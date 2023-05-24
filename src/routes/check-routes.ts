@@ -7,16 +7,31 @@ import {
   getCheck,
   updateCheck,
 } from "../controllers/check.controller";
+import { validationMiddleware } from "../middlewares/validate";
+import {
+  createCheckValidator,
+  updateCheckValidator,
+} from "../validation/check.validation";
 
 const router = Router();
 
-router.post("/", Auth, createCheck);
+router.post("/", Auth, validationMiddleware(createCheckValidator), createCheck);
 
 router.get("/", Auth, getAllChecks);
 router.get("/:id", Auth, getCheck);
 
-router.patch(":id", Auth, updateCheck);
-router.put("/:id", Auth, updateCheck);
+router.patch(
+  ":id",
+  Auth,
+  validationMiddleware(updateCheckValidator),
+  updateCheck
+);
+router.put(
+  "/:id",
+  Auth,
+  validationMiddleware(createCheckValidator),
+  updateCheck
+);
 
 router.delete("/:id", Auth, deleteCheck);
 

@@ -14,13 +14,14 @@ export const signup = async (
     const userDetails: IUser = req.body;
 
     const verificationToken = await UserService.signup(userDetails);
+    console.log(req.body);
 
     //TODO: send verification email
-    await MailService.sendMail({
-      to: userDetails.email,
-      subject: "Verification",
-      text: verificationToken,
-    });
+    // await MailService.sendMail({
+    //   to: userDetails.email,
+    //   subject: "Verification",
+    //   text: verificationToken,
+    // });
 
     response.status(201).json({
       message:

@@ -7,15 +7,12 @@ export function validationMiddleware(
   querySchema?: Joi.Schema
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const validationOptions = {
-      abortEarly: false,
+    const validationOptions: Joi.AsyncValidationOptions = {
+      abortEarly: true,
       allowUnknown: false,
     };
     const validationPromises: Promise<any>[] = [];
-    if (BodySchema)
-      validationPromises.push(
-        BodySchema.validateAsync(req.body, validationOptions)
-      );
+    if (BodySchema) validationPromises.push(BodySchema.validateAsync(req.body));
     if (paramsSchema)
       validationPromises.push(
         paramsSchema.validateAsync(req.params, validationOptions)
@@ -26,11 +23,20 @@ export function validationMiddleware(
       );
 
     Promise.all(validationPromises)
-      .then(() => {
+      .then((results) => {
+        // console.log(results);
+        // const [validatedBody, validatedParams, validatedQuery] = results;
+        // if (validatedBody) req.body = validatedBody;
+        // if (validatedParams) req.params = validatedParams;
+        // if (validatedQuery) req.query = validatedQuery;
         return next();
       })
-      .catch((err) => {
-        return next(err);
+      .catch((error) => {
+        const errors: any[] = [];
+        error.details?.forEach((err: any) => {
+          errors.push(err.message);
+        });
+        res.status(400).send({ errors });
       });
   };
 }
