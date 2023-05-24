@@ -3,9 +3,12 @@ import { IReport, Report, URL_STATUS } from "../models/report";
 import { ICheck } from "../models/check";
 import { Types } from "mongoose";
 import axios, { AxiosRequestConfig } from "axios";
+import { CheckService } from "./check.service";
 
 export class ReportService {
-  static async getReport(checkId: string) {
+  static async getReport(checkId: string, userId: string) {
+    const check = await CheckService.findById(checkId, userId);
+    if (!check) return null;
     let report = await Report.findOne({ check: checkId });
     if (!report) {
       report = new Report({
@@ -26,28 +29,30 @@ export class ReportService {
         never
       >
   ) {
-    let checkReport = await ReportService.getReport(check._id.toString());
-    const config: AxiosRequestConfig = {
-      method: "get",
-      url: `${check.protocol}://${check.url}${
-        check.port ? ":" + check.port : ""
-      }/${check.path ? check.path : ""}`,
-      timeout: check.timeout,
-      headers: check.httpHeaders,
-      auth: check.authentication,
-    };
-    // axiosRetry
-    const startTime = Date.now();
-
-    const response = await axios(config);
-    console.log("===========================");
-    // console.log(response, "response");
-    console.log("===========================");
-
-    const endTime = Date.now();
-    const duration = endTime - startTime;
+    let checkReport = await Report.findOne({ check: check._id });
+    if (!checkReport) {
+      checkReport = new Report({
+        check: check._id,
+      });
+      await checkReport.save();
+    }
 
     try {
+      const config: AxiosRequestConfig = {
+        method: "get",
+        url: `${check.protocol}://${check.url}${
+          check.port ? ":" + check.port : ""
+        }/${check.path ? check.path : ""}`,
+        timeout: check.timeout,
+        headers: check.httpHeaders,
+        auth: check.authentication,
+      };
+      // axiosRetry
+      const startTime = Date.now();
+
+      const response = await axios(config);
+      const endTime = Date.now();
+      const duration = endTime - startTime;
       if (
         check.assert?.statusCode &&
         check.assert.statusCode !== response.status
@@ -65,6 +70,7 @@ export class ReportService {
         );
       }
     } catch (error) {
+      console.log("catcheddd");
       checkReport = ReportService.handleReportData(
         checkReport,
         URL_STATUS.DOWN,
@@ -76,9 +82,7 @@ export class ReportService {
       }
     } finally {
       check.lastCreatedTime = new Date();
-      const dbStart = Date.now();
       return [checkReport.save(), check.save()];
-      console.log((Date.now() - dbStart) / 1000);
     }
   }
 
@@ -115,10 +119,15 @@ export class ReportService {
     return checkReport;
   }
 
+  //TODO: USER CHECK
   static async deleteReport(checkId: string) {
     const deletedReport = await Report.deleteOne({
       check: checkId,
     });
     return deletedReport;
+  }
+
+  static async getReportsByTag() {
+    return true;
   }
 }
