@@ -1,6 +1,7 @@
 import { Response, Request } from "express";
 import { CheckService } from "../services/check.service";
 import { ICheck } from "../models/check";
+import { ReportService } from "../services/report.service";
 
 export const createCheck = async (req: Request, response: Response) => {
   try {
@@ -51,11 +52,13 @@ export const deleteCheck = async (req: Request, response: Response) => {
   const checkId = req.params.id;
 
   try {
+    //TODO: USE DB TRANSACTION TO ONLY DELETE REPORT AND CHECK TOGETHER AND ROLLBACK IF ERROR HAPPENS
     const deleted = await CheckService.deleteCheck(
       checkId,
       req.currentUser!.id
     );
     if (!deleted) throw new Error("Error deleting check..");
+    const deletedReport = await ReportService.deleteReport(checkId);
 
     return response
       .status(200)

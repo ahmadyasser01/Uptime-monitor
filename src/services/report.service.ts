@@ -114,4 +114,11 @@ export class ReportService {
       (checkReport.uptime / (checkReport.uptime + checkReport.downtime)) * 100;
     return checkReport;
   }
+
+  static async deleteReport(checkId: string) {
+    const deletedReport = await Report.deleteOne({
+      check: checkId,
+    });
+    return deletedReport;
+  }
 }
